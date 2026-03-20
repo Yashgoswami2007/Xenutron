@@ -1,0 +1,15 @@
+# Continue – use with local Ollama (qwen3-coder:30b)
+# 1. In VS Code/Cursor: Ctrl+Shift+P → "Continue: Open config" (or "Open config.json")
+# 2. Add the model below to the "models" list in your actual config.
+# 3. In the Continue chat UI, pick "Qwen3 Coder 30B (Ollama)" from the model dropdown (not Claude).
+
+name: My Config
+version: 0.0.1
+schema: v1
+
+models:
+  - name: Qwen3 Coder 30B (Ollama)
+    provider: ollama
+    model: qwen3-coder:30b
+    # Optional: only needed if Ollama is not on localhost:11434
+    # apiBase: http://localhost:11434

@@ -1,0 +1,38 @@
+ Major Issues Found:                                                                                      
+                                                                                                             1. Attention Mask Implementation Bug (in src/model/layers.py):                                               - In the Attention class forward method, line 90-92, when creating a causal mask, it creates a mask      based on seq_len but doesn't properly account for different sequence lengths in the batch                
+    - The mask creation assumes all sequences in the batch have the same length, which may not be true in
+  practice
+  2. Data Loading Inefficiency (in src/training/data_loader.py):
+    - The _process_text method splits text by newlines and treats each line as a separate example
+    - This approach may not be optimal for language modeling as it breaks natural sentence boundaries      
+    - The padding/truncation logic could cause information loss
+  3. Model Initialization Inconsistency (in src/model/layers.py):
+    - The _init_weights method uses a fixed std of 0.02, but different layers might benefit from different 
+  initialization schemes
+    - No bias initialization for Linear layers, which could affect training
+  4. Potential Memory Issue in Generate Method (in src/model/layers.py):
+    - The generate method has a loop that may cause memory accumulation if not properly managed
+    - The model is set to eval mode but then back to train mode at the end (line 233)
+  5. Incomplete Error Handling (in src/toknizer/train_tokenizer.py):
+    - The load_tokenizer function has a bare except: clause that catches all exceptions without logging or 
+  handling
+    - This could hide important errors during tokenizer loading
+
+  Minor Issues:
+
+  1. Hardcoded Values:
+    - The model uses hardcoded values like max_seq_len=2048 in multiple places
+    - This makes the model less flexible for different use cases
+  2. Inconsistent Documentation:
+    - Some methods lack proper docstrings or have incomplete documentation
+    - The attention mechanism implementation could benefit from more detailed comments
+  3. Potential Resource Management Issues:
+    - The data loader creates temporary files during training that aren't properly cleaned up in error     
+  cases
+    - The trainer doesn't have explicit resource cleanup for GPU memory
+
+  Data Sets Analysis:
+
+  The codebase contains two .arrow dataset files in the data folder:
+  - dataset/oasst1_processed/data-00000-of-00001.arrow
+  - dataset/genz_combined_processed/data-00000-of-00001.arrow
